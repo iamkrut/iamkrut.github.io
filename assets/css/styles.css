@@ -621,3 +621,33 @@ pre code {
 /* Small devices (tablets, 768px and up) */
 /* Medium devices (desktops, 992px and up) */
 /* Large devices (large desktops, 1200px and up) */
+
+/* Projects */
+
+.projects {
+  background-color: #1f1815;
+  background-attachment: scroll, fixed;
+  background-image: url("images/overlay.png");
+  background-position: top left, top left;
+  background-repeat: repeat, no-repeat;
+  background-size: auto;
+  color: rgba(255, 255, 255, 0.5);
+  height: 100%;
+  color: #fff;
+}
+
+.projects a.btn-cta-primary-selected {
+  background: #10b2e7;
+  border: 1px solid #272822;
+  color: #272822;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.projects a.btn-cta-primary-action {
+  background: #a6e22e;
+  border: 1px solid #272822;
+  color: #272822;
+  font-weight: 600;
+  text-transform: uppercase;
+}

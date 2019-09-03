@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->  
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->  
+<!--[if !IE]><!--> <html lang="en"> <!--<![endif]-->   
+<html>
+    <head>
+        <title>Sorting Algorithms</title>
+        <!-- Meta -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">  
+        <link href='http://fonts.googleapis.com/css?family=Lato:300,400,300italic,400italic' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'> 
+        <!-- Global CSS -->
+        <link rel="stylesheet" href="../../assets/plugins/bootstrap/css/bootstrap.min.css">
+        <!-- Plugins CSS -->    
+        <link rel="stylesheet" href="../../assets/plugins/font-awesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../assets/plugins/prism/prism.css">
+        <!-- Theme CSS -->  
+        <link id="theme-style" rel="stylesheet" href="../../assets/css/styles.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script type="text/javascript" src="main.js"></script>
+    </head> 
+    <body data-spy="scroll">
+        
+        <!---//Facebook button code-->
+        <div id="fb-root"></div>
+        <script>(function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.0";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));</script>
+        
+        <!-- ******HEADER****** --> 
+        <header id="header" class="header navbar-fixed-top">  
+            <div class="container">            
+                <h1 class="logo pull-left">
+                    <a class="scrollto" href="#promo">
+                        <span class="logo-title">{ Krut Patel };</span>
+                    </a>
+                </h1><!--//logo-->              
+                <nav id="main-nav" class="main-nav navbar-right" role="navigation">
+                    <div class="navbar-header">
+                        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-collapse">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button><!--//nav-toggle-->
+                    </div><!--//navbar-header-->            
+                    <div class="navbar-collapse collapse" id="navbar-collapse">
+                        <ul class="nav navbar-nav">
+                            <li class="active nav-item sr-only"><a class="scrollto" href="#promo">Home</a></li>
+                            <li class="nav-item"><a class="scrollto" href="#portfolio">&lt; Portfolio &#47;&gt;</a></li>
+                            <li class="nav-item"><a class="scrollto" href="#resume">&lt; Resume &#47;&gt;</a></li>                       
+                            <li class="nav-item last"><a class="scrollto" href="#contact">&lt; Contact &#47;&gt;</a></li>
+                        </ul><!--//nav-->
+                    </div><!--//navabr-collapse-->
+                </nav><!--//main-nav-->
+            </div>
+        </header><!--//header-->
+        
+        <!-- ******PROMO****** -->
+        <div class="projects offset-header">
+            <div class="container text-center">
+                <h1 class="title" style="color:rgb(166, 226, 46)">Sorting Algorithms Visualized</h1>
+                <br/> 
+                <div id="sort_algorithms">
+                    Sorting Algorithm:
+                    <a id="sort-algo-0" class="btn btn-cta-primary-selected">Bubble Sort</a>
+                    <a id="sort-algo-1" class="btn btn-cta-primary">Selection Sort</a>
+                    <a id="sort-algo-2" class="btn btn-cta-primary">Insertion Sort</a>
+                    <a id="sort-algo-3" class="btn btn-cta-primary">Merge Sort</a>
+                    <a id="sort-algo-4" class="btn btn-cta-primary">Quick Sort</a>
+                    <a id="sort-algo-5" class="btn btn-cta-primary">Heap Sort</a>
+                </div>
+                <br/>
+                <div>
+                    Array size:
+                    <input id="arr_size" class="btn btn-cta-primary" type="text" value="10" pattern="[0-9]*"/>
+                    <a id="generate_arr"class="btn btn-cta-primary-action">Generate Array</a>
+                </div>
+                <br/>
+                <div class='div-vis' id='div-vis'></div>
+                <br/>
+                <div>
+                    <a id='sort_arr' class="btn btn-cta-primary-action">SORT !!!</a>
+                </div>
+                <br/>&nbsp;
+            </div><!--//container-->
+        </div><!--//promo-->
+        <style>
+            .div-vis {
+                display: flex;
+                flex-direction: row;
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                justify-content: center;
+            }
+            .rect-default {
+                background-color: rgb(109, 185, 196);
+                width: 100%;
+                align-self: flex-end;
+            }
+            .div-vis .rect-default {
+                margin: .25em;
+            }
+            .div-vis .rect-default:first-of-type {
+                margin-left: 1em;
+            }
+            .div-vis .rect-default:last-of-type {
+                margin-right: 1em;
+            }
+            .vis-text {
+                color: black;
+                font-weight: bold;
+            }
+        </style>
+
+        <!-- Adding functionality -->
+        <script>
+            function sort(arr, selected_algo_index){
+                return bubbleSort(arr);
+            }
+
+            function visualize(arr){
+                var div = document.getElementById("div-vis");
+                for (i = 0; i < arr.length; i++) {
+                    div.innerHTML += "<div class='rect-default' id='rect-" + i + "' style='width:30px; height:" + 3.5 * arr[i] + "px'><span class='vis-text'>" + arr[i] + "</span></div>";
+                }
+            }
+        </script>
+
+        <!-- Javascript -->          
+        <script type="text/javascript" src="../../assets/plugins/jquery-1.11.3.min.js"></script>   
+        <script type="text/javascript" src="../../assets/plugins/jquery.easing.1.3.js"></script>   
+        <script type="text/javascript" src="../../assets/plugins/bootstrap/js/bootstrap.min.js"></script>     
+        <script type="text/javascript" src="../../assets/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script> 
+        <script type="text/javascript" src="../../assets/plugins/prism/prism.js"></script>    
+        <script type="text/javascript" src="../../assets/js/main.js"></script>       
+        <script type="text/javascript">
+            $(document).ready(function(){
+                // Initializing vars and ui
+                var arr_size = 25;
+                var selected_algo_element;
+                var selected_algo_index = 0;
+                var min = 7;
+                var max = 99;
+                selected_algo_element = $("#sort-algo-0");
+                $("#arr_size").val(arr_size);
+
+                // Initializing a array
+                var arr = intializeArray(min, max, arr_size);
+                visualize(arr);
+                
+                // on changing array size
+                $("#arr_size").change(function(){
+                    arr_size = $("#arr_size").val();
+                    arr = intializeArray(min, max, arr_size);
+                    $("#div-vis").empty();
+                    visualize(arr);
+                }); 
+                
+                // on clicking generate
+                $("#generate_arr").click(function(){
+                    arr_size = $("#arr_size").val();
+                    arr = intializeArray(min, max, arr_size);
+                    $("#div-vis").empty();
+                    visualize(arr);
+                }); 
+                
+                // selecting sorting algorithm
+                $('[id^="sort-algo-"]').click(function(){
+                    selected_algo_element.removeClass('btn-cta-primary-selected');
+                    selected_algo_element.addClass('btn-cta-primary');
+                    selected_algo_element = $(this);
+                    selected_algo_index = parseInt($(this).attr('id').charAt($(this).attr('id').length-1));
+                    $(this).attr('class','btn btn-cta-primary-selected');
+                }); 
+
+                // on clicking sorting
+                $("#sort_arr").click(function(){
+                    arr = sort(arr, selected_algo_index);
+                    $("#div-vis").empty();
+                    visualize(arr);
+                }); 
+            });
+        </script>
+    </body>
+
+</html>
