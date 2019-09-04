@@ -25,7 +25,6 @@
             <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
             <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-        <script type="text/javascript" src="main.js"></script>
     </head> 
     <body data-spy="scroll">
         
@@ -93,6 +92,8 @@
                 <br/>
                 <div>
                     <a id='sort_arr' class="btn btn-cta-primary-action">SORT !!!</a>
+                    <br/>
+                    <a id='anim_temp' class="btn btn-cta-primary">Animation</a>
                 </div>
                 <br/>&nbsp;
             </div><!--//container-->
@@ -107,6 +108,10 @@
                 justify-content: center;
             }
             .rect-default {
+                -webkit-transition: all 0.4s ease-in-out;
+                -moz-transition: all 0.4s ease-in-out;
+                -ms-transition: all 0.4s ease-in-out;
+                -o-transition: all 0.4s ease-in-out;
                 background-color: rgb(109, 185, 196);
                 width: 100%;
                 align-self: flex-end;
@@ -128,6 +133,10 @@
 
         <!-- Adding functionality -->
         <script>
+            function intializeArray(min, max, size){
+                return Array.from({length: size}, () => Math.floor(Math.random() * (max - min + 1) ) + min);
+            }
+
             function sort(arr, selected_algo_index){
                 return bubbleSort(arr);
             }
@@ -137,6 +146,66 @@
                 for (i = 0; i < arr.length; i++) {
                     div.innerHTML += "<div class='rect-default' id='rect-" + i + "' style='width:30px; height:" + 3.5 * arr[i] + "px'><span class='vis-text'>" + arr[i] + "</span></div>";
                 }
+            }
+
+            function move(from_rect, to_rect){
+                from_rect.css({position: 'relative'});
+                from_rect.css("background-color", "#a6e22e");
+                x = to_rect.offset();
+                from_rect.animate({
+                    left: x.left + to_rect.width() / 2.0 + 2
+                }, "linear", function(){ // after the animation ends
+                    from_rect.css("background-color", "rgb(109, 185, 196)");
+                });
+            }
+            function sleep(dur) {
+                var d = new Date().getTime() + dur;
+                while(new Date().getTime() <= d ) {
+                    //Do nothing
+                }
+            }
+
+            // helper function
+            var delayed = (function() {
+            var queue = [];
+
+            function processQueue() {
+                if (queue.length > 0) {
+                setTimeout(function () {
+                    queue.shift().cb();
+                    processQueue();
+                }, queue[0].delay);
+                }
+            }
+
+            return function delayed(delay, cb) {
+                queue.push({ delay: delay, cb: cb });
+
+                if (queue.length === 1) {
+                processQueue();
+                }
+            };
+            }());
+
+            function bubbleSort(arr){
+                var len = arr.length;
+                for (var i = len-1; i>=0; i--){
+                    for(var j = 1; j<=i; j++){
+                        delayed(10, function(i, j) {
+                            return function() {
+                                if(arr[j-1]>arr[j]){
+                                    var temp = arr[j-1];
+                                    arr[j-1] = arr[j];
+                                    arr[j] = temp;
+                                    console.log(arr);
+                                    $("#div-vis").empty();
+                                    visualize(arr);
+                                }
+                            };
+                        }(i, j));
+                    }
+                }
+                return arr;
             }
         </script>
 
@@ -190,11 +259,24 @@
                 // on clicking sorting
                 $("#sort_arr").click(function(){
                     arr = sort(arr, selected_algo_index);
-                    $("#div-vis").empty();
-                    visualize(arr);
+                    // $("#div-vis").empty();
+                    // visualize(arr);
                 }); 
+                
+                // on clicking sorting
+                $("#anim_temp").click(function(){
+                    move($('#rect-2'), $('#rect-8'))
+                });
             });
         </script>
     </body>
-
 </html>
+
+<!--
+
+
+    - run one iteration of sort algo
+    - visualize it setting the element getting moved to transparent.
+    - once the element is animated and in place, delete it and turn the opacity off again for that element.
+
+-->
