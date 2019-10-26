@@ -70,32 +70,11 @@
         <!-- ******PROMO****** -->
         <div class="projects offset-header">
             <div class="container text-center">
-                <h1 class="title" style="color:rgb(166, 226, 46)">Sorting Algorithms Visualized</h1>
-                <br/> 
-                <div id="sort_algorithms">
-                    Sorting Algorithm:
-                    <a id="sort-algo-0" class="btn btn-cta-primary-selected">Bubble Sort</a>
-                    <a id="sort-algo-1" class="btn btn-cta-primary">Selection Sort</a>
-                    <a id="sort-algo-2" class="btn btn-cta-primary">Insertion Sort</a>
-                    <a id="sort-algo-3" class="btn btn-cta-primary">Merge Sort</a>
-                    <a id="sort-algo-4" class="btn btn-cta-primary">Quick Sort</a>
-                    <a id="sort-algo-5" class="btn btn-cta-primary">Heap Sort</a>
-                </div>
-                <br/>
-                <div>
-                    Array size:
-                    <input id="arr_size" class="btn btn-cta-primary" type="text" value="10" pattern="[0-9]*"/>
-                    <a id="generate_arr"class="btn btn-cta-primary-action">Generate Array</a>
-                </div>
-                <br/>
-                <div class='div-vis' id='div-vis'></div>
-                <br/>
-                <div>
-                    <a id='sort_arr' class="btn btn-cta-primary-action">SORT !!!</a>
-                    <br/>
-                    <a id='anim_temp' class="btn btn-cta-primary">Animation</a>
-                </div>
-                <br/>&nbsp;
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/p5.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.dom.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.2/addons/p5.sound.min.js"></script>
+                <script src="quicksort.js"></script>
+                
             </div><!--//container-->
         </div><!--//promo-->
         <style>
@@ -131,84 +110,6 @@
             }
         </style>
 
-        <!-- Adding functionality -->
-        <script>
-            function intializeArray(min, max, size){
-                return Array.from({length: size}, () => Math.floor(Math.random() * (max - min + 1) ) + min);
-            }
-
-            function sort(arr, selected_algo_index){
-                return bubbleSort(arr);
-            }
-
-            function visualize(arr){
-                var div = document.getElementById("div-vis");
-                for (i = 0; i < arr.length; i++) {
-                    div.innerHTML += "<div class='rect-default' id='rect-" + i + "' style='width:30px; height:" + 3.5 * arr[i] + "px'><span class='vis-text'>" + arr[i] + "</span></div>";
-                }
-            }
-
-            function move(from_rect, to_rect){
-                from_rect.css({position: 'relative'});
-                from_rect.css("background-color", "#a6e22e");
-                x = to_rect.offset();
-                from_rect.animate({
-                    left: x.left + to_rect.width() / 2.0 + 2
-                }, "linear", function(){ // after the animation ends
-                    from_rect.css("background-color", "rgb(109, 185, 196)");
-                });
-            }
-            function sleep(dur) {
-                var d = new Date().getTime() + dur;
-                while(new Date().getTime() <= d ) {
-                    //Do nothing
-                }
-            }
-
-            // helper function
-            var delayed = (function() {
-            var queue = [];
-
-            function processQueue() {
-                if (queue.length > 0) {
-                setTimeout(function () {
-                    queue.shift().cb();
-                    processQueue();
-                }, queue[0].delay);
-                }
-            }
-
-            return function delayed(delay, cb) {
-                queue.push({ delay: delay, cb: cb });
-
-                if (queue.length === 1) {
-                processQueue();
-                }
-            };
-            }());
-
-            function bubbleSort(arr){
-                var len = arr.length;
-                for (var i = len-1; i>=0; i--){
-                    for(var j = 1; j<=i; j++){
-                        delayed(10, function(i, j) {
-                            return function() {
-                                if(arr[j-1]>arr[j]){
-                                    var temp = arr[j-1];
-                                    arr[j-1] = arr[j];
-                                    arr[j] = temp;
-                                    console.log(arr);
-                                    $("#div-vis").empty();
-                                    visualize(arr);
-                                }
-                            };
-                        }(i, j));
-                    }
-                }
-                return arr;
-            }
-        </script>
-
         <!-- Javascript -->          
         <script type="text/javascript" src="../../assets/plugins/jquery-1.11.3.min.js"></script>   
         <script type="text/javascript" src="../../assets/plugins/jquery.easing.1.3.js"></script>   
@@ -216,59 +117,6 @@
         <script type="text/javascript" src="../../assets/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script> 
         <script type="text/javascript" src="../../assets/plugins/prism/prism.js"></script>    
         <script type="text/javascript" src="../../assets/js/main.js"></script>       
-        <script type="text/javascript">
-            $(document).ready(function(){
-                // Initializing vars and ui
-                var arr_size = 25;
-                var selected_algo_element;
-                var selected_algo_index = 0;
-                var min = 7;
-                var max = 99;
-                selected_algo_element = $("#sort-algo-0");
-                $("#arr_size").val(arr_size);
-
-                // Initializing a array
-                var arr = intializeArray(min, max, arr_size);
-                visualize(arr);
-                
-                // on changing array size
-                $("#arr_size").change(function(){
-                    arr_size = $("#arr_size").val();
-                    arr = intializeArray(min, max, arr_size);
-                    $("#div-vis").empty();
-                    visualize(arr);
-                }); 
-                
-                // on clicking generate
-                $("#generate_arr").click(function(){
-                    arr_size = $("#arr_size").val();
-                    arr = intializeArray(min, max, arr_size);
-                    $("#div-vis").empty();
-                    visualize(arr);
-                }); 
-                
-                // selecting sorting algorithm
-                $('[id^="sort-algo-"]').click(function(){
-                    selected_algo_element.removeClass('btn-cta-primary-selected');
-                    selected_algo_element.addClass('btn-cta-primary');
-                    selected_algo_element = $(this);
-                    selected_algo_index = parseInt($(this).attr('id').charAt($(this).attr('id').length-1));
-                    $(this).attr('class','btn btn-cta-primary-selected');
-                }); 
-
-                // on clicking sorting
-                $("#sort_arr").click(function(){
-                    arr = sort(arr, selected_algo_index);
-                    // $("#div-vis").empty();
-                    // visualize(arr);
-                }); 
-                
-                // on clicking sorting
-                $("#anim_temp").click(function(){
-                    move($('#rect-2'), $('#rect-8'))
-                });
-            });
-        </script>
     </body>
 </html>
 
