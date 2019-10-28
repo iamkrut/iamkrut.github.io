@@ -1,7 +1,7 @@
 let img; // Declare variable 'img'.
 
 function setup() {
-    createCanvas(4000, 4000);
+    createCanvas(412*2, 412*7);
     img_path = 'https://lh4.googleusercontent.com/SDNLFgcN-ZoyGITdJ5Gsb3zull4_qN7T4wNd2cXVRHFbj1gpCOHf5iYb0VGGVAmIlBPSHuCnmTe0lCrPKHvm7MH-AY18SxajMxLEZySjr5VggCXTfjJLfxcvjga3lPj1HQ=s412';
     loadImage(img_path, img => { // Load the image
         // image(img, 0, 0);
