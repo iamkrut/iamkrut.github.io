@@ -1,7 +1,7 @@
 let img; // Declare variable 'img'.
 
 function setup() {
-    createCanvas(412*2, 412*7);
+    canvas = createCanvas(412*2, 412*7);
     img_path = 'https://lh4.googleusercontent.com/SDNLFgcN-ZoyGITdJ5Gsb3zull4_qN7T4wNd2cXVRHFbj1gpCOHf5iYb0VGGVAmIlBPSHuCnmTe0lCrPKHvm7MH-AY18SxajMxLEZySjr5VggCXTfjJLfxcvjga3lPj1HQ=s412';
     loadImage(img_path, img => { // Load the image
         // image(img, 0, 0);
@@ -20,15 +20,17 @@ function setup() {
         text('NMS', img.width + 10, img.height * 3 + img.height/2);
         image(img_nms, 0, img.height * 3);
 
-        [img_weak, img_strong, img_dt] = double_threshold(img_nms);
+        [img_weak, img_strong, img_dt, weak_value, strong_value] = double_threshold(img_nms);
         text('Double Threshold Weak', img.width + 10, img.height * 4 + img.height/2);
         image(img_weak, 0, img.height * 4);
         text('Double Threshold Strong', img.width + 10, img.height * 5 + img.height/2);
         image(img_strong, 0, img.height * 5);
 
-        img_ht = hysteresis_tracking(img_dt, 25, 255);
+        img_ht = hysteresis_tracking(img_dt, weak_value, strong_value);
         text('Edge Tracking by Hysteresis', img.width + 10, img.height * 6 + img.height/2);
         image(img_ht, 0, img.height * 6);
+
+        image(img_ht, img.width, 0); 
     });
 }
 
@@ -58,7 +60,7 @@ function hysteresis_tracking(img, weak_value, strong_value){
     return img
 }
 
-function double_threshold(img, low_ratio=0.05, high_ratio=0.09){
+function double_threshold(img, low_ratio=0.02, high_ratio=0.2){
 
     max_pixel_value = 0;
     for (let i = 0; i < img.width; i ++){
@@ -70,8 +72,8 @@ function double_threshold(img, low_ratio=0.05, high_ratio=0.09){
     }
     
     print(max_pixel_value);
-    high_threshold = max_pixel_value * high_ratio;
-    low_threshold = high_threshold * low_ratio;
+    high_threshold = floor(max_pixel_value * high_ratio);
+    low_threshold = floor(high_threshold * low_ratio);
 
     print(high_threshold);
     print(low_threshold);
@@ -96,7 +98,7 @@ function double_threshold(img, low_ratio=0.05, high_ratio=0.09){
                 _img.set(i, j, color(255));
             }else if (img.get(i, j)[0] >= low_threshold){
                 _img_weak.set(i, j, color(25));
-                _img.set(i, j, color(255));
+                _img.set(i, j, color(25));
             }
         }
     }
@@ -104,7 +106,7 @@ function double_threshold(img, low_ratio=0.05, high_ratio=0.09){
     _img_weak.updatePixels(); // update pixels
     _img_strong.updatePixels(); // update pixels
     _img.updatePixels();
-    return [_img_weak, _img_strong, _img];
+    return [_img_weak, _img_strong, _img, low_threshold, high_threshold];
 }
 
 function non_max_suppression(img, gradient_direction){
